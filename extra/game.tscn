@@ -14,8 +14,13 @@ fractal_octaves = 2
 domain_warp_type = 2
 metadata/_preview_in_3d_space_ = true
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_b5rbx"]
+frequency = 0.0211
+fractal_type = 0
+
 [node name="Game" type="Node2D" unique_id=595459480 node_paths=PackedStringArray("ground_tilemap", "object_storage", "world_generator")]
 script = ExtResource("1_80nbo")
+world_size = Vector2i(256, 256)
 ground_tilemap = NodePath("GroundTilemap")
 object_storage = NodePath("ObjectStorage")
 world_generator = NodePath("WorldGenerator2")
@@ -26,6 +31,7 @@ raw_height = SubResource("FastNoiseLite_pmuuy")
 
 [node name="WorldGenerator2" type="Node" parent="." unique_id=1867648185]
 script = ExtResource("3_b5rbx")
+raw_height = SubResource("FastNoiseLite_b5rbx")
 
 [node name="GroundTilemap" type="TileMapLayer" parent="." unique_id=1216818347]
 tile_set = ExtResource("3_pmuuy")

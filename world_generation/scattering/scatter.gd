@@ -37,8 +37,6 @@ static func random(ctx: GenerationContext, num_points: int, filters: Array[Scatt
 	while not WorkerThreadPool.is_task_completed(task_id):
 		await ctx.scene_tree.process_frame
 	
-	ctx.state = rand.state # update ctx.random
-	
 	# explicitely wait. The task should be done, so this shouldn't take any time.
 	# This just lets the thread-pool deallocate resources
 	WorkerThreadPool.wait_for_task_completion(task_id)
@@ -138,9 +136,7 @@ static func jittered_grid(ctx: GenerationContext, cell_size: Vector2, jitter_str
 	
 	while not WorkerThreadPool.is_task_completed(task_id):
 		await ctx.scene_tree.process_frame
-	
-	ctx.state = rand.state # update ctx.random
-	
+		
 	# explicitely wait. The task should be done, so this shouldn't take any time.
 	# This just lets the thread-pool deallocate resources
 	WorkerThreadPool.wait_for_task_completion(task_id)
