@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://exxlvq2eegif"]
+
+[ext_resource type="Script" uid="uid://bwbvets761aw4" path="res://prefabs/mushroom/mushroom_api.gd" id="1_2ppq3"]
+[ext_resource type="Script" uid="uid://cr5gt1kfrrn8w" path="res://prefabs/mushroom/mushroom_sprite.gd" id="2_38tbj"]
+[ext_resource type="Texture2D" uid="uid://gbb643jh4b8e" path="res://assets/terrain_decorations/Mooshrooms.png" id="2_fbs3p"]
+[ext_resource type="Script" uid="uid://df01j2a5vrg32" path="res://extra/remove_on_overlap.gd" id="4_pxcqe"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8gobo"]
+atlas = ExtResource("2_fbs3p")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pxcqe"]
+size = Vector2(12, 6)
+
+[node name="Mushroom" type="Node2D" unique_id=520291730]
+y_sort_enabled = true
+script = ExtResource("1_2ppq3")
+size = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=820347127]
+texture = SubResource("AtlasTexture_8gobo")
+offset = Vector2(0, -4)
+script = ExtResource("2_38tbj")
+
+[node name="OverlapArea" type="Area2D" parent="." unique_id=583362880]
+script = ExtResource("4_pxcqe")
+destroy_priority = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OverlapArea" unique_id=402514549]
+shape = SubResource("RectangleShape2D_pxcqe")
+debug_color = Color(0.9949201, 0, 0.22175625, 0.41960785)
+
+[connection signal="mutated" from="." to="Sprite2D" method="update"]

@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://bbxakiihurhdm"]
+
+[ext_resource type="Script" uid="uid://cay5suxlamdp0" path="res://prefabs/bush/bush_api.gd" id="1_ipcjb"]
+[ext_resource type="Script" uid="uid://deic6olbd4n4b" path="res://prefabs/bush/bush_sprite.gd" id="2_r5qqw"]
+[ext_resource type="Texture2D" uid="uid://ckaqj3i3g4e7y" path="res://assets/terrain_decorations/Bushes.png" id="2_w03n8"]
+[ext_resource type="Script" uid="uid://df01j2a5vrg32" path="res://extra/remove_on_overlap.gd" id="4_sjl0v"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7pspu"]
+atlas = ExtResource("2_w03n8")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uti6h"]
+size = Vector2(18, 9)
+
+[node name="Bush" type="Node2D" unique_id=1291117360]
+y_sort_enabled = true
+script = ExtResource("1_ipcjb")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=175134365]
+position = Vector2(0, 2)
+texture = SubResource("AtlasTexture_7pspu")
+offset = Vector2(0, -4)
+script = ExtResource("2_r5qqw")
+
+[node name="OverlapArea" type="Area2D" parent="." unique_id=1548202264]
+script = ExtResource("4_sjl0v")
+destroy_priority = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OverlapArea" unique_id=2086462198]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_uti6h")
+debug_color = Color(0.9949201, 0, 0.22175625, 0.41960785)
+
+[connection signal="mutated" from="." to="Sprite2D" method="update_sprite"]

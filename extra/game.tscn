@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://n4krbb7rdyqk"]
+
+[ext_resource type="Script" uid="uid://e6j7caturbso" path="res://extra/game.gd" id="1_80nbo"]
+[ext_resource type="Script" uid="uid://dofm5336ipw4v" path="res://extra/world_generator.gd" id="2_3r2t0"]
+[ext_resource type="Script" uid="uid://clj5brnulx2ng" path="res://extra/world_generator_2.gd" id="3_b5rbx"]
+[ext_resource type="TileSet" uid="uid://bxf3skprl28aw" path="res://assets/tileset.tres" id="3_pmuuy"]
+[ext_resource type="Script" uid="uid://b6ptcuwydowm" path="res://extra/moving_camera.gd" id="4_7dsui"]
+[ext_resource type="Script" uid="uid://dmt5mk3st5ooj" path="res://extra/fps_text.gd" id="5_0gjl1"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_pmuuy"]
+noise_type = 0
+frequency = 0.0194
+fractal_octaves = 2
+domain_warp_type = 2
+metadata/_preview_in_3d_space_ = true
+
+[node name="Game" type="Node2D" unique_id=595459480 node_paths=PackedStringArray("ground_tilemap", "object_storage", "world_generator")]
+script = ExtResource("1_80nbo")
+ground_tilemap = NodePath("GroundTilemap")
+object_storage = NodePath("ObjectStorage")
+world_generator = NodePath("WorldGenerator2")
+
+[node name="WorldGenerator" type="Node" parent="." unique_id=1427494491]
+script = ExtResource("2_3r2t0")
+raw_height = SubResource("FastNoiseLite_pmuuy")
+
+[node name="WorldGenerator2" type="Node" parent="." unique_id=1867648185]
+script = ExtResource("3_b5rbx")
+
+[node name="GroundTilemap" type="TileMapLayer" parent="." unique_id=1216818347]
+tile_set = ExtResource("3_pmuuy")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1106018227]
+position = Vector2(512, 512)
+script = ExtResource("4_7dsui")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1826493397]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=338216685]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Control" unique_id=740530260]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+text = "FPS: Loading"
+fit_content = true
+autowrap_mode = 0
+script = ExtResource("5_0gjl1")
+
+[node name="ObjectStorage" type="Node2D" parent="." unique_id=470470251]
+y_sort_enabled = true

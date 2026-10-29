@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://b7vw5235tl5bp"]
+
+[ext_resource type="Script" uid="uid://c5ijtc7qhipdv" path="res://prefabs/pine_tree/pine_tree_api.gd" id="1_0d4hq"]
+[ext_resource type="Script" uid="uid://cwk067yumdyp2" path="res://prefabs/pine_tree/pine_tree_sprite.gd" id="2_qcj7y"]
+[ext_resource type="Texture2D" uid="uid://dvm3i2ncltvg7" path="res://assets/terrain_decorations/Pinetrees_32x48.png" id="2_rcar7"]
+[ext_resource type="Script" uid="uid://df01j2a5vrg32" path="res://extra/remove_on_overlap.gd" id="4_owcem"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bikiq"]
+atlas = ExtResource("2_rcar7")
+region = Rect2(64, 144, 32, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_owcem"]
+size = Vector2(16, 9)
+
+[node name="PineTree" type="Node2D" unique_id=159302991]
+y_sort_enabled = true
+script = ExtResource("1_0d4hq")
+leaf_color = 3
+trunk_color = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=411278043]
+position = Vector2(0, 4)
+texture = SubResource("AtlasTexture_bikiq")
+offset = Vector2(0, -24)
+script = ExtResource("2_qcj7y")
+
+[node name="OverlapArea" type="Area2D" parent="." unique_id=350571953]
+script = ExtResource("4_owcem")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OverlapArea" unique_id=1926248116]
+shape = SubResource("RectangleShape2D_owcem")
+debug_color = Color(0.9949201, 0, 0.22175625, 0.41960785)
+
+[connection signal="mutated" from="." to="Sprite2D" method="update"]

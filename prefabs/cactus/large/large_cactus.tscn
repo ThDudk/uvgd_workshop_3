@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bn54g3apptecg"]
+
+[ext_resource type="Script" uid="uid://beyfp0mq34f3y" path="res://prefabs/cactus/large/large_cactus_api.gd" id="1_i8fih"]
+[ext_resource type="Script" uid="uid://bhgagm0y3x6ll" path="res://prefabs/cactus/large/large_cactus_sprite.gd" id="2_0ktyf"]
+[ext_resource type="Texture2D" uid="uid://dpqs6avvfnwcm" path="res://assets/terrain_decorations/Cactus.png" id="2_541na"]
+[ext_resource type="Script" uid="uid://df01j2a5vrg32" path="res://extra/remove_on_overlap.gd" id="4_ov3xg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_whg2e"]
+atlas = ExtResource("2_541na")
+region = Rect2(0, 16, 32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_keeya"]
+size = Vector2(11, 8)
+
+[node name="LargeCactus" type="Node2D" unique_id=1269532541]
+script = ExtResource("1_i8fih")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1194457693]
+texture = SubResource("AtlasTexture_whg2e")
+offset = Vector2(0, -12)
+script = ExtResource("2_0ktyf")
+
+[node name="OverlapArea" type="Area2D" parent="." unique_id=1011873292]
+script = ExtResource("4_ov3xg")
+destroy_priority = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OverlapArea" unique_id=1383993754]
+position = Vector2(0.5, 1)
+shape = SubResource("RectangleShape2D_keeya")
+debug_color = Color(0.9949201, 0, 0.22175625, 0.41960785)
+
+[connection signal="mutated" from="." to="Sprite2D" method="update"]

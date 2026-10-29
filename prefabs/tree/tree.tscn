@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://jku6xoudtedd"]
+
+[ext_resource type="Script" uid="uid://dx7gbi72mmlrt" path="res://prefabs/tree/tree_api.gd" id="1_2r5k7"]
+[ext_resource type="Texture2D" uid="uid://ckhylu1hciv0q" path="res://assets/terrain_decorations/Trees_48x48.png" id="2_q6uns"]
+[ext_resource type="Script" uid="uid://cmr0rbuinog6c" path="res://prefabs/tree/tree_sprite.gd" id="2_r31ks"]
+[ext_resource type="Script" uid="uid://df01j2a5vrg32" path="res://extra/remove_on_overlap.gd" id="4_qeqdf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q6uns"]
+atlas = ExtResource("2_q6uns")
+region = Rect2(96, 192, 48, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qeqdf"]
+size = Vector2(21, 14)
+
+[node name="Tree" type="Node2D" unique_id=1238832899]
+script = ExtResource("1_2r5k7")
+leaf_color = 3
+trunk_color = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1459198442]
+position = Vector2(0, 6)
+texture = SubResource("AtlasTexture_q6uns")
+offset = Vector2(0, -32)
+script = ExtResource("2_r31ks")
+
+[node name="OverlapArea" type="Area2D" parent="." unique_id=1681628575]
+position = Vector2(0, 6)
+script = ExtResource("4_qeqdf")
+destroy_priority = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OverlapArea" unique_id=646695394]
+position = Vector2(0, -6)
+shape = SubResource("RectangleShape2D_qeqdf")
+debug_color = Color(0.9949201, 0, 0.22175625, 0.41960785)
+
+[connection signal="mutated" from="." to="Sprite2D" method="update"]
