@@ -1,18 +1,18 @@
 class_name ScatterFilter extends Resource
 
-static func in_biome(ctx: GenerationContext, biomes: Biomes, biome: String) -> InBiomeFilter:
+static func in_biome(ctx: GenerationContext, biome_getter: Callable, biome: String) -> InBiomeFilter:
 	var filter = InBiomeFilter.new()
 	filter.global_to_local = ctx.ground_tilemap.transform.affine_inverse()
 	filter.cell_size = ctx.tile_size()
-	filter.biomes = biomes
+	filter.biomes = biome_getter
 	filter.biome = biome
 	return filter
 
-static func rect_in_biome(ctx: GenerationContext, biomes: Biomes, biome: String, size: Vector2) -> RectInBiomeFilter:
+static func rect_in_biome(ctx: GenerationContext, biome_getter: Callable, biome: String, size: Vector2) -> RectInBiomeFilter:
 	var filter = RectInBiomeFilter.new()
 	filter.global_to_local = ctx.ground_tilemap.transform.affine_inverse()
 	filter.cell_size = ctx.tile_size()
-	filter.biomes = biomes
+	filter.biomes = biome_getter
 	filter.biome = biome
 	filter.size = size
 	return filter

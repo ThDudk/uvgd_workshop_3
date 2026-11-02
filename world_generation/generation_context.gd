@@ -1,6 +1,5 @@
 class_name GenerationContext extends Object
 
-var scene_tree: SceneTree
 var world_size: Vector2i
 var ground_tilemap: TileMapLayer
 var object_storage: Node
@@ -98,36 +97,14 @@ func spawn_tree(pos: Vector2) -> TreeAPI:
 
 # Random API
 
-## Calls self.random.randf()
-func randf() -> float:
-	return random.randf()
+func thread_safe_random() -> RandomNumberGenerator:
+	var new_rand = RandomNumberGenerator.new()
+	new_rand.seed = random.seed + random.randi()
+	return new_rand
 
-## Calls self.random.randf_range(from, to)
-func randf_range(from: float, to: float) -> float:
-	return random.randf_range(from, to)
-
-## Calls self.random.randi()
-func randi() -> int:
-	return random.randi()
-
-## Calls self.random.randi_range(from, to)
-func randi_range(from: int, to: int) -> int:
-	return random.randi_range(from, to)
-
-## Takes a list of options, where keys are the enum variant, and values are the relative likelihood.
-func pick_random_enum_value(options: Dictionary[int, int]) -> int:
-	var total = options.values().reduce(func(acc, b): return acc + b)
-	
-	var rand = randi_range(0, total)
-	
-	var running_total = 0
-	for key in options.keys():
-		running_total += options[key]
-		if running_total >= rand:
-			return key
-	
-	push_error("Failed to pick random. This should be impossible.")
-	return 0
+## WARNING: This context must be created independently for EACH THREAD. This type does NOT enforce safety with Mutex's. 
+func thread_safe_ctx() -> SafeGenerationContext:
+	return SafeGenerationContext.new(self.tile_size(), self.world_size, thread_safe_random(), self.world_seed)
 
 # World Size API
 
@@ -150,3 +127,43 @@ func tile_world_size() -> Vector2i:
 
 func real_world_size() -> Vector2:
 	return world_size * tile_size()
+
+func to_world_pos(tile: Vector2i) -> Vector2:
+	return tile * tile_size()
+
+func to_tile_pos(world_pos: Vector2) -> Vector2i:
+	@warning_ignore("narrowing_conversion")
+	return Vector2i(
+		world_pos.x / tile_size().x,
+		world_pos.y / tile_size().y
+	);
+
+# Filter Helpers
+
+func rect_in_map(world_pos: Vector2, size: Vector2i):
+	var top_left = (world_pos - size / 2.0)
+	var bottom_right = (world_pos + size / 2.0)
+	
+	if bottom_right.x > real_world_size().x or bottom_right.y > real_world_size().y:
+		return false
+	
+	if top_left.x < 0 or top_left.y < 0:
+		return false
+	
+	return true
+
+func rect_in_biome(world_pos: Vector2, size: Vector2i, biome_getter: Callable, biome: String) -> bool:
+	return rect_in_one_of_biomes(world_pos, size, biome_getter, [biome])
+
+func rect_in_one_of_biomes(world_pos: Vector2, size: Vector2i, biome_at_callback: Callable, biomes: Array[String]) -> bool:
+	var top_left = (world_pos - size / 2.0)
+	var bottom_right = (world_pos + size / 2.0)
+	
+	for x in range(int(top_left.x), int(bottom_right.x), tile_size().x):
+		for y in range(int(top_left.y), int(bottom_right.y), tile_size().y):
+			var tile = to_tile_pos(world_pos)
+			
+			if biome_at_callback.call(tile.x, tile.y) not in biomes:
+				return false
+	
+	return true

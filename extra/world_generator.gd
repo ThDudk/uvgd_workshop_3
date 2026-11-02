@@ -1,96 +1,92 @@
 class_name WorldGenerator extends Node
 
-@export_category("Noise Layers")
 @export var raw_height: FastNoiseLite
 
-@onready # This needs @onready since raw_height is a editor value, so it's only available on `_ready()`
-var height = FilteredNoise.build(raw_height, [
-	NoiseFilter.map(-1, 1, 0, 1),
-	NoiseFilter.falloff(64, Vector2i(64, 64)),
-	NoiseFilter.clamp_value(0, 1),
-	NoiseFilter.remap_range(0, 0.3, -1, 0.3),
-])
+func height_at(x: int, y: int) -> float:
+	return raw_height.get_noise_2d(x, y)
 
-@onready # @onready needed since `height` is @onready
-var biomes: Biomes = Biomes.build([
-	Biome.build("Ocean", BiomeCondition.noise_less_than(height, -0.1)),
-	Biome.build("Beach", BiomeCondition.noise_less_than(height, 0.1)),
-	Biome.default("Grass"),
-])
+func biome_at(x: int, y: int) -> String:
+	var height = height_at(x, y)
+	
+	if height < -0.1:
+		return "Ocean"
+	elif height < 0.1:
+		return "Sand"
+	else:
+		return "Grass"
+
 
 func generate(ctx: GenerationContext):
-	height.set_seed(ctx.world_seed)
-	
-	await place_floor_tiles(ctx)
-	await spawn_trees_naive(ctx)
-	#await spawn_bushes(ctx)
-	
-	print("Successfully generated the world!")
+	await generate_floor(ctx)
+	await scatter_objects(ctx)
 
-
-func place_floor_tiles(ctx: GenerationContext):
-	for tile in ctx.tiles():
-		var biome = biomes.biome_at(tile.x, tile.y)
-		match biome:
-			"Ocean": ctx.set_tile(tile, GenerationContext.Terrain.Water)
-			"Beach": ctx.set_tile(tile, GenerationContext.Terrain.Sand)
-			"Grass": ctx.set_tile(tile, GenerationContext.Terrain.Grass)
+func generate_floor(ctx: GenerationContext):
+	for x in ctx.tile_world_size().x:
+		for y in ctx.tile_world_size().y:
+			var biome = biome_at(x, y)
+			
+			match biome:
+				"Ocean": ctx.set_tile(Vector2i(x, y), GenerationContext.Terrain.Water)
+				"Sand": ctx.set_tile(Vector2i(x, y), GenerationContext.Terrain.Sand)
+				"Grass": ctx.set_tile(Vector2i(x, y), GenerationContext.Terrain.Grass)
 	
-	ctx.update_terrain()
-	#var change_set = ctx.calculate_terrain_tiles_in_background()
-	#await change_set.await_finished(get_tree())
-	#change_set.apply()
- 
+	var changes = ctx.calculate_terrain_tiles_in_background()
+	await changes.await_finished(get_tree())
+	changes.apply()
 
-func spawn_trees_naive(ctx: GenerationContext):
-	var points = Scatter.blocking_poisson(ctx, 64, [
-		ScatterFilter.rect_in_biome(ctx, biomes, "Grass", Vector2(24, 24)),
-	])
+func tree_scatter_points(ctx: SafeGenerationContext, points: Array) -> int:
+	var rand = ctx.lock_random()
 	
-	for point in points:
-		spawn_random_tree(point, ctx)
-
-func spawn_trees(ctx: GenerationContext):
-	#var points = await Scatter.poisson(ctx, 64, [
-		#ScatterFilter.remove_random(ctx, 0.25),
-		#ScatterFilter.rect_in_biome(ctx, biomes, "Grass", Vector2(64, 32)),
-	#]);
-	var points = await Scatter.poisson(ctx, 80, [
-		#ScatterFilter.remove_random(ctx, 0.25),
-		ScatterFilter.rect_in_biome(ctx, biomes, "Grass", Vector2(64, 32)),
-		ScatterFilter.rect_in_map(ctx, Vector2(64, 32)),
-	]);
+	var task_id := WorkerThreadPool.add_task(func():
+		var positions = ScatterPoints.poisson(ctx.real_world_size(), 64)
 	
-	for point in points:
-		spawn_random_tree(point, ctx)
-
-func spawn_bushes(ctx: GenerationContext):
-	var points = await Scatter.jittered_grid(ctx, Vector2(32, 32), Vector2(32, 32), [
-		ScatterFilter.remove_random(ctx, 0.5),
-		ScatterFilter.rect_in_biome(ctx, biomes, "Grass", Vector2(24, 24)),
-	]);
+		points[0] = positions.filter(func(world_pos):
+			return (
+				ctx.rect_in_map(world_pos, Vector2i(48, 32))
+				and ctx.rect_in_biome(world_pos, Vector2i(48, 32), biome_at, "Grass")
+				and rand.randf() < 0.95
+			)
+		)
+	)
 	
-	for point in points:
-		spawn_random_bush(point, ctx)
+	ctx.unlock_random()
+	return task_id
 
-
-func spawn_random_tree(pos: Vector2, ctx: GenerationContext):
-	var trunk_color = ctx.pick_random_enum_value({
-		TreeAPI.TrunkColor.Brown: 9,
-		TreeAPI.TrunkColor.Gray: 1,
-	})
+func bush_scatter_points(ctx: SafeGenerationContext, points: Array) -> int:
+	var rand = ctx.lock_random()
 	
-	var tree = ctx.spawn_tree(pos)
-	tree.leaf_color = TreeAPI.LeafColor.Green
-	tree.trunk_color = trunk_color
-
-func spawn_random_bush(pos: Vector2, ctx: GenerationContext):
-	var shade = ctx.pick_random_enum_value({
-		BushAPI.Shade.Light: 3,
-		BushAPI.Shade.Medium: 2,
-		BushAPI.Shade.Dark: 1,
-	})
+	var task_id := WorkerThreadPool.add_task(func():
+		var positions = ScatterPoints.jittered_grid(ctx.real_world_size(), rand, Vector2(64, 64), Vector2(32, 32))
 	
-	var bush = ctx.spawn_bush(pos)
-	bush.shade = shade
-	bush.type = BushAPI.Type.Grasslands
+		points[0] = positions.filter(func(world_pos):
+			return (
+				ctx.rect_in_map(world_pos, Vector2i(8, 8))
+				and ctx.rect_in_biome(world_pos, Vector2i(8, 8), biome_at, "Grass")
+				and ctx.random.randf() < 0.2
+			)
+		)
+	)
+	
+	ctx.unlock_random()
+	return task_id
+
+func scatter_objects(ctx: GenerationContext):
+	var tree_points = [[]]
+	var bush_points = [[]]
+	var tree_task_id = tree_scatter_points(ctx.thread_safe_ctx(), tree_points)
+	var bush_task_id = bush_scatter_points(ctx.thread_safe_ctx(), bush_points)
+	
+	while not WorkerThreadPool.is_task_completed(tree_task_id) or not WorkerThreadPool.is_task_completed(bush_task_id):
+		await get_tree().process_frame
+	
+	WorkerThreadPool.wait_for_task_completion(tree_task_id)
+	WorkerThreadPool.wait_for_task_completion(bush_task_id)
+	
+	for point in tree_points[0]:
+		var tree := ctx.spawn_tree(point)
+		
+		tree.trunk_color = TreeAPI.TrunkColor.Brown
+		tree.leaf_color = TreeAPI.LeafColor.Green
+	
+	for point in bush_points[0]:
+		ctx.spawn_bush(point)

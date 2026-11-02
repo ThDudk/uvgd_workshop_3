@@ -14,7 +14,6 @@ var generating := false
 
 func build_context() -> GenerationContext:
 	var ctx = GenerationContext.new()
-	ctx.scene_tree = get_tree()
 	ctx.random = RandomNumberGenerator.new()
 	ctx.ground_tilemap = self.ground_tilemap
 	ctx.object_storage = self.object_storage

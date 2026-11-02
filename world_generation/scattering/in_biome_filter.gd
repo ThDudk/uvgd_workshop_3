@@ -2,7 +2,7 @@ class_name InBiomeFilter extends ScatterFilter
 
 var global_to_local: Transform2D
 var cell_size: Vector2i
-var biomes: Biomes
+var biomes: Callable
 var biome: String
 
 func filter(points: Array) -> Array:
@@ -13,5 +13,5 @@ func filter(points: Array) -> Array:
 			floori(local_pos.y / cell_size.y)
 		);
 		
-		return biomes.biome_at(tile.x, tile.y) == biome
+		return biomes.call(tile.x, tile.y) == biome
 	)
