@@ -97,12 +97,13 @@ func spawn_tree(pos: Vector2) -> TreeAPI:
 
 # Random API
 
+## Use thread_safe_ctx() instead.
 func thread_safe_random() -> RandomNumberGenerator:
 	var new_rand = RandomNumberGenerator.new()
 	new_rand.seed = random.seed + random.randi()
 	return new_rand
 
-## WARNING: This context must be created independently for EACH THREAD. This type does NOT enforce safety with Mutex's. 
+## WARNING: This should be called independently for EACH THREAD. Failure to do so will result in errors.
 func thread_safe_ctx() -> SafeGenerationContext:
 	return SafeGenerationContext.new(self.tile_size(), self.world_size, thread_safe_random(), self.world_seed)
 
@@ -138,7 +139,7 @@ func to_tile_pos(world_pos: Vector2) -> Vector2i:
 		world_pos.y / tile_size().y
 	);
 
-# Filter Helpers
+# Blue noise filters
 
 func rect_in_map(world_pos: Vector2, size: Vector2i):
 	var top_left = (world_pos - size / 2.0)

@@ -10,6 +10,10 @@
 frequency = 0.0211
 fractal_type = 0
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0gjl1"]
+frequency = 0.005
+fractal_type = 0
+
 [node name="Game" type="Node2D" unique_id=595459480 node_paths=PackedStringArray("ground_tilemap", "object_storage", "world_generator")]
 script = ExtResource("1_80nbo")
 world_size = Vector2i(256, 256)
@@ -20,6 +24,7 @@ world_generator = NodePath("WorldGenerator")
 [node name="WorldGenerator" type="Node" parent="." unique_id=1867648185]
 script = ExtResource("3_b5rbx")
 raw_height = SubResource("FastNoiseLite_b5rbx")
+raw_temperature = SubResource("FastNoiseLite_0gjl1")
 
 [node name="GroundTilemap" type="TileMapLayer" parent="." unique_id=1216818347]
 tile_set = ExtResource("3_pmuuy")

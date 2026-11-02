@@ -51,7 +51,9 @@ func to_tile_pos(world_pos: Vector2) -> Vector2i:
 # Rand functions
 
 func lock_random() -> RandomNumberGenerator:
-	mutex.lock()
+	if not mutex.try_lock():
+		push_error("Cannot access random. You have already locked it. call unlock_random before locking again.")
+		return null # Ideally it would just crash here
 	
 	return self._random
 
