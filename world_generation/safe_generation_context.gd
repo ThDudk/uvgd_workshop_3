@@ -42,10 +42,9 @@ func to_world_pos(tile: Vector2i) -> Vector2:
 	return tile * tile_size()
 
 func to_tile_pos(world_pos: Vector2) -> Vector2i:
-	@warning_ignore("narrowing_conversion")
 	return Vector2i(
-		world_pos.x / tile_size().x,
-		world_pos.y / tile_size().y
+		floori(world_pos.x / tile_size().x),
+		floori(world_pos.y / tile_size().y),
 	);
 
 # Rand functions
@@ -83,7 +82,7 @@ func rect_in_one_of_biomes(world_pos: Vector2, size: Vector2i, biome_at_callback
 	
 	for x in range(int(top_left.x), int(bottom_right.x), tile_size().x):
 		for y in range(int(top_left.y), int(bottom_right.y), tile_size().y):
-			var tile = to_tile_pos(world_pos)
+			var tile = to_tile_pos(Vector2(x, y))
 			
 			if biome_at_callback.call(tile.x, tile.y) not in biomes:
 				return false

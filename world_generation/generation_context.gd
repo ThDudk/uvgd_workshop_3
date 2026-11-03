@@ -162,7 +162,7 @@ func rect_in_one_of_biomes(world_pos: Vector2, size: Vector2i, biome_at_callback
 	
 	for x in range(int(top_left.x), int(bottom_right.x), tile_size().x):
 		for y in range(int(top_left.y), int(bottom_right.y), tile_size().y):
-			var tile = to_tile_pos(world_pos)
+			var tile = to_tile_pos(Vector2(x, y))
 			
 			if biome_at_callback.call(tile.x, tile.y) not in biomes:
 				return false

@@ -36,6 +36,9 @@ func generate_world():
 	
 	await get_tree().create_timer(0.1).timeout
 	
+	if randomize_seed:
+		world_seed = randi()
+	
 	var ctx = build_context()
 	ctx.set_seed(world_seed)
 	

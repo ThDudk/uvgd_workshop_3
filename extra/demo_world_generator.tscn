@@ -9,6 +9,7 @@ fractal_type = 0
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_0gjl1"]
 frequency = 0.005
 fractal_type = 0
+domain_warp_enabled = true
 
 [node name="WorldGenerator" type="Node" unique_id=1845758995]
 script = ExtResource("1_rf0wp")
