@@ -9,7 +9,7 @@ This project is a Godot workshop created for the University of Victoria's Game D
 
 # Downloading
 
-Begin by cloning this repository. If you're on github, you can download the project as a zip:
+Begin by [cloning this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository). If you're on github, you can download the project as a zip:
 
 <img width="1649" height="993" alt="Screenshot 2026-11-03 at 1 50 38 PM" src="https://github.com/user-attachments/assets/0d9f1c2d-21c2-4a90-96bf-f4d0a14e8387" />
 
