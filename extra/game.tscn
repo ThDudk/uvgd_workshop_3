@@ -1,30 +1,19 @@
 [gd_scene format=3 uid="uid://n4krbb7rdyqk"]
 
 [ext_resource type="Script" uid="uid://e6j7caturbso" path="res://extra/game.gd" id="1_80nbo"]
-[ext_resource type="Script" uid="uid://clj5brnulx2ng" path="res://extra/world_generator.gd" id="3_b5rbx"]
+[ext_resource type="Script" uid="uid://blg66soxt7ebr" path="res://world_generator.gd" id="2_0gjl1"]
 [ext_resource type="TileSet" uid="uid://bxf3skprl28aw" path="res://assets/tileset.tres" id="3_pmuuy"]
 [ext_resource type="Script" uid="uid://b6ptcuwydowm" path="res://extra/moving_camera.gd" id="4_7dsui"]
 [ext_resource type="Script" uid="uid://dmt5mk3st5ooj" path="res://extra/fps_text.gd" id="5_0gjl1"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_b5rbx"]
-frequency = 0.0211
-fractal_type = 0
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_0gjl1"]
-frequency = 0.005
-fractal_type = 0
-
 [node name="Game" type="Node2D" unique_id=595459480 node_paths=PackedStringArray("ground_tilemap", "object_storage", "world_generator")]
 script = ExtResource("1_80nbo")
-world_size = Vector2i(256, 256)
 ground_tilemap = NodePath("GroundTilemap")
 object_storage = NodePath("ObjectStorage")
 world_generator = NodePath("WorldGenerator")
 
-[node name="WorldGenerator" type="Node" parent="." unique_id=1867648185]
-script = ExtResource("3_b5rbx")
-raw_height = SubResource("FastNoiseLite_b5rbx")
-raw_temperature = SubResource("FastNoiseLite_0gjl1")
+[node name="WorldGenerator" type="Node" parent="." unique_id=1806847806]
+script = ExtResource("2_0gjl1")
 
 [node name="GroundTilemap" type="TileMapLayer" parent="." unique_id=1216818347]
 tile_set = ExtResource("3_pmuuy")

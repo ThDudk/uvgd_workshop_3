@@ -1,4 +1,4 @@
-class_name WorldGenerator extends Node
+class_name DemoWorldGenerator extends Node
 
 @export var raw_height: FastNoiseLite
 @export var raw_temperature: FastNoiseLite

@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bmmhe0parpwri"]
+
+[ext_resource type="Script" uid="uid://clj5brnulx2ng" path="res://extra/demo_world_generator.gd" id="1_rf0wp"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_b5rbx"]
+frequency = 0.0211
+fractal_type = 0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0gjl1"]
+frequency = 0.005
+fractal_type = 0
+
+[node name="WorldGenerator" type="Node" unique_id=1845758995]
+script = ExtResource("1_rf0wp")
+raw_height = SubResource("FastNoiseLite_b5rbx")
+raw_temperature = SubResource("FastNoiseLite_0gjl1")
