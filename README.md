@@ -1,4 +1,4 @@
-# uvgd_workshop_3
+# UVGD Workshop #3 — Tools in Procedural Generation
 
 <img width="1631" height="887" alt="Screenshot 2026-11-03 at 1 46 51 PM" src="https://github.com/user-attachments/assets/c6447ab0-cebe-4289-82a2-3318cf76db7c" />
 
