@@ -13,7 +13,7 @@ world_seed = 5
 world_size = Vector2i(216, 216)
 ground_tilemap = NodePath("GroundTilemap")
 object_storage = NodePath("ObjectStorage")
-world_generator = NodePath("")
+world_generator = NodePath("WorldGenerator")
 
 [node name="WorldGenerator" type="Node" parent="." unique_id=1806847806]
 script = ExtResource("2_0gjl1")
