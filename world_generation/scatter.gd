@@ -1,7 +1,7 @@
 class_name ScatterPoints extends Object
 
-static func random(num_points: int, real_world_size: Vector2i, rand: RandomNumberGenerator) -> PackedVector2Array:
-	var points = []
+static func random(num_points: int, real_world_size: Vector2i, rand: RandomNumberGenerator) -> Array[Vector2]:
+	var points: Array[Vector2] = []
 	
 	for point in range(0, num_points):
 		var x = rand.randf_range(0, real_world_size.x)
