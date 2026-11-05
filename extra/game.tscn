@@ -6,9 +6,6 @@
 [ext_resource type="Script" uid="uid://b6ptcuwydowm" path="res://extra/moving_camera.gd" id="4_7dsui"]
 [ext_resource type="Script" uid="uid://dmt5mk3st5ooj" path="res://extra/fps_text.gd" id="5_0gjl1"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_0gjl1"]
-fractal_octaves = 2
-
 [node name="Game" type="Node2D" unique_id=595459480 node_paths=PackedStringArray("ground_tilemap", "object_storage", "world_generator")]
 script = ExtResource("1_80nbo")
 randomize_seed = true
@@ -20,7 +17,6 @@ world_generator = NodePath("WorldGenerator")
 
 [node name="WorldGenerator" type="Node" parent="." unique_id=1806847806]
 script = ExtResource("2_0gjl1")
-raw_height = SubResource("FastNoiseLite_0gjl1")
 
 [node name="GroundTilemap" type="TileMapLayer" parent="." unique_id=1216818347]
 tile_set = ExtResource("3_pmuuy")
