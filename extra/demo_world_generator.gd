@@ -32,7 +32,6 @@ func generate_floor(ctx: GenerationContext):
 			match biome:
 				"Ocean": ctx.set_tile(Vector2i(x, y), GenerationContext.Terrain.Water)
 				"Sand": ctx.set_tile(Vector2i(x, y), GenerationContext.Terrain.Sand)
-				"Desert": ctx.set_tile(Vector2i(x, y), GenerationContext.Terrain.Sand)
 				"Grass": ctx.set_tile(Vector2i(x, y), GenerationContext.Terrain.Grass)
 	
 	var changes = ctx.calculate_terrain_tiles_in_background()
